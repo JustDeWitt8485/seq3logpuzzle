@@ -35,14 +35,12 @@ def read_urls(filename):
         p_find = filename.find('_')
         url = filename[p_find + 1::]
         for lines in sorted(f):
-            url_search = re.search(r"Get\s(\S*)", lines)
-            # print(url_search)
+            url_search = re.search(r"GET\s(\S*)", lines)
             if '/puzzle' in url_search.group(1):
-                # print(url_search.group)
                 url_groups = f'http://{url}{url_search.group(1)}'
                 if url_groups not in pic_list:
                     pic_list.append(f'{url_groups}')
-    return pic_list
+    return sorted(pic_list)
 
 
 def download_images(img_urls, dest_dir):
