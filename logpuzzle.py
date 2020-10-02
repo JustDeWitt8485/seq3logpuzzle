@@ -14,6 +14,10 @@ HTTP/1.0" 302 528 "-" "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US;
 rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"
 """
 
+__author__ = """ Tracy DeWitt,
+Shanquel Scott,
+"""
+
 import os
 import re
 import sys
@@ -26,8 +30,19 @@ def read_urls(filename):
     extracting the hostname from the filename itself, sorting
     alphabetically in increasing order, and screening out duplicates.
     """
-    # +++your code here+++
-    pass
+    pic_list = []
+    with open(filename, 'r') as f:
+        p_find = filename.find('_')
+        url = filename[p_find + 1::]
+        for lines in sorted(f):
+            url_search = re.search(r"Get\s(\S*)", lines)
+            # print(url_search)
+            if '/puzzle' in url_search.group(1):
+                # print(url_search.group)
+                url_groups = f'http://{url}{url_search.group(1)}'
+                if url_groups not in pic_list:
+                    pic_list.append(f'{url_groups}')
+    return pic_list
 
 
 def download_images(img_urls, dest_dir):
@@ -38,8 +53,16 @@ def download_images(img_urls, dest_dir):
     to show each local image file.
     Creates the directory if necessary.
     """
-    # +++your code here+++
-    pass
+
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+    with open("index.html", "w") as f:
+        f.write('<html><body>')
+        for i, url in enumerate(img_urls):
+            urllib.request.urlretrieve(
+                url, os.path.join(dest_dir, "img" + str(i) + ".jpg"))
+            f.write(f'<img src="{dest_dir}{str(i)}.jpg"/>')
+        f.write('</body></html>')
 
 
 def create_parser():
